@@ -1,20 +1,20 @@
-# Chrome Web Store submission check (2026-10-19)
+# Chrome Web Store 심사 준비 점검 (v1.14.7)
 
-This repository is the separate Chrome Web Store edition of **콘솔을 편하게**. The original extension repository is not modified by this checklist.
+이 저장소는 **콘솔을 편하게**의 Chrome 웹 스토어 전용 버전입니다. 원본 저장소는 수정하지 않습니다.
 
-## Verified in the repository
-- Manifest V3; extension name `콘솔을 편하게`; version `1.14.6`.
-- Root files: `manifest.json`, `content.js`, `patch.js`, `popup.html`, `popup.js`, `README.md`.
-- Icons: `icon16.png`, `icon32.png`, `icon48.png`, `icon128.png`.
-- Both `unofficial/runtime.js` and `unofficial/public-runtime.js`.
-- All 18 unofficial block JS files listed by `popup.js`.
-- No Uncharted references in checked `manifest.json`, `content.js`, `popup.html`, `popup.js`, or unofficial runtime JS.
+## 2026-10-20 변경 사항
 
-## Must still be checked before submission
-- Install as an unpacked extension in `chrome://extensions` and perform end-to-end functional tests in Entry.
-- Assess each unofficial block for CSP compatibility, execution of remotely retrieved JavaScript, and permissions used.
-- Confirm licenses and authorship/distribution rights of included third-party blocks.
-- Provide truthful descriptions, screenshots, privacy disclosures, and permissions justifications on the Chrome Web Store listing.
-- Chrome Web Store review approval is **not guaranteed** by the above file checks.
+- 심사 위험이 큰 비공식 블록 8종을 웹 스토어 버전에서 제외했습니다: `etc.js`, `nyang.js`, `magnet.js`, `mint.js`, `special.js`, `npi.js`, `express.js`, `block20.js`.
+- 위 8종은 `popup.js`, `content.js`, `unofficial/public-runtime.js`의 로딩 목록에서도 제거했습니다.
+- 남은 선택형 비공식 블록 10종: `dummy.js`, `strong.js`, `common.js`, `newblock.js`, `right_click.js`, `kris.js`, `tecsu.js`, `video.js`, `fileio.js`, `entsave.js`.
+- `manifest.json` 버전을 **1.14.7**로 올렸습니다.
+- 언차티드, Groq 공유 키, 사용자 지정 커스텀 코드 실행 기능은 이 스토어 저장소에 포함되지 않습니다.
 
-Do not change the original repository to address store-specific review requirements.
+## 남은 검증 항목
+
+- `chrome://extensions`에서 압축해제 로드 후 엔트리 작업 화면과 공개 작품에서 실행 테스트.
+- 남은 10종의 원격 코드·외부 API·DOM 삽입·권한 사용 및 저작권/재배포 조건 확인.
+- Chrome 웹 스토어 개인정보처리, 단일 목적, 권한 사용 설명 및 스크린샷 준비.
+- Chrome 웹 스토어 승인은 검증 전 보장할 수 없습니다.
+
+> 위 8종의 제외는 악성 코드 판정이 아닙니다. 심사 통과 가능성을 높이기 위한 보수적 조치입니다. 원본 저장소는 변경하지 않았습니다.
