@@ -92,11 +92,10 @@
 
             <div class="body__c1156">
 
-                <img
-                    src="https://raw.githack.com/vlzi/entryfile/main/upload.svg"
-                    style="height:40vh;cursor:pointer;"
+                <button type="button"
+                    style="min-height:80px;cursor:pointer;padding:16px;font-size:18px;"
                     id="${IMAGE_ID}"
-                >
+                >파일 선택</button>
 
                 <p style="padding:0 0 25px 0;">
                     클릭하여 파일을 입력해주세요.
