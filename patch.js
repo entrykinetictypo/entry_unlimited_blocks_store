@@ -10,7 +10,6 @@
     let installed = false;
     let waitingTimer = null;
     let lastProjectId = null;
-    let entryAuthHeaders = null;
 let allowUnofficialReload = false;
 
 window.addEventListener(
@@ -26,49 +25,6 @@ window.addEventListener(
     },
     true
 );
-const originalFetch = window.fetch;
-
-window.fetch = function(input, init = {}) {
-    try {
-        const url =
-            typeof input === "string"
-                ? input
-                : input?.url || "";
-
-        const headers =
-            new Headers(
-                init.headers ||
-                input?.headers ||
-                {}
-            );
-
-        const csrfToken =
-            headers.get("csrf-token");
-
-        const xToken =
-            headers.get("x-token");
-
-        if (csrfToken && xToken) {
-            entryAuthHeaders = {
-                "csrf-token": csrfToken,
-                "x-token": xToken,
-                "x-client-type":
-                    headers.get("x-client-type") ||
-                    "Client"
-            };
-
-            console.log(
-                `${NAME} Entry 인증 헤더 확보`
-            );
-        }
-    } catch (_) {}
-
-    return originalFetch.apply(
-        this,
-        arguments
-    );
-};
-
     console.log(`${NAME} patch controller loaded`);
 
     function requestState() {
@@ -168,15 +124,6 @@ function sendProjectId() {
     }
 
 
-    /*
-     * 저장된 작품은 작품 복원을 위해
-     * 인증 헤더가 필요함
-     */
-    if (!entryAuthHeaders) {
-        return;
-    }
-
-
     if (routeId === lastProjectId) {
         return;
     }
@@ -205,135 +152,11 @@ function sendProjectId() {
         routeId
     );
 }
+    // Store edition deliberately avoids capturing authentication headers.
+    // Server restoration is disabled: verify saved-project reload behavior separately.
     async function restoreProjectAfterUnofficial(projectId) {
-    if (
-        !window.Entry ||
-        !projectId ||
-        typeof Entry.loadProject !== "function"
-    ) {
-        return;
+        console.warn(`${NAME} Server restoration disabled in store edition:`, projectId);
     }
-
-    try {
-        console.log(
-            `${NAME} 비공식 블록 등록 후 작품 원본 복원 시작:`,
-            projectId
-        );
-
-        const query = `
-            query SELECT_PROJECT($id: ID!) {
-                project(id: $id) {
-                    id
-                    name
-                    speed
-                    objects
-                    variables
-                    cloudVariable
-                    messages
-                    functions
-                    tables
-                    scenes
-                    realTimeVariable {
-    variableType
-    key
-    value
-    array {
-        key
-        data
-    }
-    minValue
-    maxValue
-    visible
-    x
-    y
-    width
-    height
-    object
-}
-                    learning
-                    expansionBlocks
-                    aiUtilizeBlocks
-                    hardwareLiteBlocks
-                    blockCategoryUsage
-                }
-            }
-        `;
-
-        if (!entryAuthHeaders) {
-    throw new Error(
-        "Entry 인증 헤더를 아직 확보하지 못했습니다."
-    );
-}
-
-const response = await fetch(
-    "https://playentry.org/graphql/SELECT_PROJECT",
-    {
-        method: "POST",
-        mode: "cors",
-        credentials: "include",
-        headers: {
-            "accept": "*/*",
-            "content-type": "application/json",
-            "csrf-token":
-                entryAuthHeaders["csrf-token"],
-            "x-token":
-                entryAuthHeaders["x-token"],
-            "x-client-type":
-                entryAuthHeaders["x-client-type"] ||
-                "Client"
-        },
-        body: JSON.stringify({
-            query: query,
-            variables: {
-                id: projectId
-            }
-        })
-    }
-);
-
-        if (!response.ok) {
-            throw new Error(
-                `작품 요청 실패: ${response.status}`
-            );
-        }
-
-        const result = await response.json();
-
-        const project =
-            result?.data?.project;
-
-        if (!project) {
-            throw new Error(
-                "작품 데이터를 찾을 수 없음"
-            );
-        }
-
-        console.log(
-            `${NAME} 서버 작품 데이터 확보`,
-            project
-        );
-
-        if (
-            typeof Entry.clearProject === "function"
-        ) {
-            Entry.clearProject();
-        }
-
-        await Entry.loadProject(project);
-
-        Entry.projectId = projectId;
-
-        console.log(
-            `${NAME} 비공식 블록 포함 작품 복원 완료`
-        );
-
-    } catch (error) {
-        console.error(
-            `${NAME} 작품 복원 실패`,
-            error
-        );
-    }
-}
     function entryReady() {
         return Boolean(
             window.Entry &&
