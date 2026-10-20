@@ -9,6 +9,18 @@ const KRIS_COLOR = {
   darken: '#5FBF84',
 };
 
+/* Store edition: block non-HTTP(S) schemes from user-provided URLs. */
+function safeKrisUrl(value) {
+  try {
+    const url = new URL(String(value), window.location.href);
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
+    if (url.username || url.password) return null;
+    return url.href;
+  } catch (_) {
+    return null;
+  }
+}
+
 /* iframe 생성 */
 function getKrisIframe() {
   let iframe = document.getElementById('kris_iframe');
@@ -75,7 +87,9 @@ const krisBlocks = [
     class: 'text',
     func: (sprite, script) => {
       const iframe = getKrisIframe();
-      iframe.src = script.getValue('URL', script);
+      const safeUrl = safeKrisUrl(script.getValue('URL', script));
+      if (!safeUrl) { console.warn('[크리스블록] 안전하지 않은 iframe URL 차단'); return; }
+      iframe.src = safeUrl;
       iframe.style.display = 'block';
     },
   },
@@ -172,7 +186,9 @@ const krisBlocks = [
     paramsKeyMap: { URL: 0 },
     class: 'text',
     func: (sprite, script) => {
-      window.open(script.getValue('URL', script), '_blank');
+      const safeUrl = safeKrisUrl(script.getValue('URL', script));
+      if (!safeUrl) { console.warn('[크리스블록] 안전하지 않은 URL 차단'); return; }
+      window.open(safeUrl, '_blank', 'noopener,noreferrer');
     },
   },
 
