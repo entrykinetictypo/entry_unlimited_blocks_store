@@ -532,7 +532,6 @@ function loadSavedUnofficialBlocks(projectId) {
 
    const loadOrder = [
     "unofficial/strong.js",
-    "unofficial/right_click.js",
     "unofficial/kris.js",
     "unofficial/common.js",
     "unofficial/tecsu.js",
