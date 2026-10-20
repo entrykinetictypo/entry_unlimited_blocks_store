@@ -19,21 +19,13 @@
 
     const publicFiles = [
     "unofficial/right_click.js",
-    "unofficial/special.js",
-    "unofficial/magnet.js",
-    "unofficial/block20.js",
     "unofficial/common.js",
     "unofficial/tecsu.js",
-    "unofficial/mint.js",
     "unofficial/newblock.js",
-    "unofficial/npi.js",
-    "unofficial/etc.js",
-    "unofficial/nyang.js",
     "unofficial/strong.js",
     "unofficial/kris.js",
     "unofficial/entsave.js",
     "unofficial/video.js",
-    "unofficial/express.js"
 ];
 
     const timer =
