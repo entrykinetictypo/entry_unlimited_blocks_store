@@ -18,7 +18,6 @@
         ).href;
 
     const publicFiles = [
-    "unofficial/right_click.js",
     "unofficial/common.js",
     "unofficial/tecsu.js",
     "unofficial/newblock.js",
