@@ -179,7 +179,6 @@ const unofficialBlocks = [
 {name:"강력크블록",file:"unofficial/strong.js"},
 {name:"공용블록",file:"unofficial/common.js"},
 {name:"뉴블록",file:"unofficial/newblock.js"},
-{name:"우클릭블록",file:"unofficial/right_click.js"},
 {name:"크리스블록",file:"unofficial/kris.js"},
 {name:"특수블록",file:"unofficial/tecsu.js"},
 {name:"동영상블록",file:"unofficial/video.js"},
