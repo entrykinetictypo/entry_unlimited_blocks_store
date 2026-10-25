@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "콘솔을 편하게",
-  "version": "1.14.7",
+  "version": "1.14.8",
   "description": "엔트리 블록 연결 제한 해제 및 선택형 편의 블록 지원",
   "permissions": [
     "storage",
