@@ -86,17 +86,32 @@ document.getElementById("invertProjectColors").addEventListener("click", async (
         const frames = await chrome.scripting.executeScript({
             target: { tabId: tab.id, allFrames: true },
             func: () => {
-                if (!document.querySelector('.css-1gvhr.e1ayezcv9')) {
-                    return false;
+                const target = document.querySelector('.css-1gvhr.e1ayezcv9');
+                if (!target) {
+                    return null;
                 }
+
+                // Read the actual project display state, so reopening the popup
+                // does not reset the toggle.
+                const isInverted = target.style.filter === 'invert(100%)' ||
+                    target.style.filter === 'invert(1)';
+
+                if (isInverted) {
+                    document.querySelector('.css-1gvhr.e1ayezcv9').style.filter = 'invert(0%)';
+                    return 'off';
+                }
+
                 document.querySelector('.css-1gvhr.e1ayezcv9').style.filter = 'invert(100%)';
-                return true;
+                return 'on';
             }
         });
 
-        result.textContent = frames.some(frame => frame.result === true)
-            ? "색상반전 적용 완료"
-            : "작품 화면 요소를 찾지 못했습니다.";
+        const applied = frames.find(frame => frame.result === 'on' || frame.result === 'off');
+        result.textContent = !applied
+            ? "작품 화면 요소를 찾지 못했습니다."
+            : applied.result === 'on'
+                ? "색상반전 적용 완료"
+                : "색상반전 해제 완료";
     } catch (error) {
         console.error("[콘솔을 편하게] 색상반전 실패:", error);
         result.textContent = "색상반전 적용에 실패했습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.";
