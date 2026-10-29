@@ -68,6 +68,41 @@ toggleButton.addEventListener("click", () => {
     });
 });
 
+// Invert project display colors only after confirming the active tab URL.
+document.getElementById("invertProjectColors").addEventListener("click", async () => {
+    const result = document.getElementById("invertProjectColorsResult");
+
+    try {
+        const [tab] = await chrome.tabs.query({
+            active: true,
+            currentWindow: true
+        });
+
+        if (!tab?.id || !tab.url?.startsWith("https://playentry.org/project")) {
+            result.textContent = "엔트리 작품 보기 페이지에서만 사용할 수 있습니다.";
+            return;
+        }
+
+        const frames = await chrome.scripting.executeScript({
+            target: { tabId: tab.id, allFrames: true },
+            func: () => {
+                if (!document.querySelector('.css-1gvhr.e1ayezcv9')) {
+                    return false;
+                }
+                document.querySelector('.css-1gvhr.e1ayezcv9').style.filter = 'invert(100%)';
+                return true;
+            }
+        });
+
+        result.textContent = frames.some(frame => frame.result === true)
+            ? "색상반전 적용 완료"
+            : "작품 화면 요소를 찾지 못했습니다.";
+    } catch (error) {
+        console.error("[콘솔을 편하게] 색상반전 실패:", error);
+        result.textContent = "색상반전 적용에 실패했습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.";
+    }
+});
+
 const blockIdInput = document.getElementById("blockId");
 const addBlockButton = document.getElementById("addBlock");
 const addResult = document.getElementById("addResult");
